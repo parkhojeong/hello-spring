@@ -4,6 +4,7 @@ import hello.hellospring.domain.Member;
 import hello.hellospring.service.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,9 +35,11 @@ public class MemberController {
     }
 
     @GetMapping("/members")
-    public ResponseEntity<List<MemberResponse>> members(){
-        List<MemberResponse> memberResponses = memberService.findMembers().stream().map(member -> new MemberResponse(member.getName())).toList();
-        return ResponseEntity.ok(memberResponses);
+    public String members(Model model){
+        List<Member> members = memberService.findMembers();
+        model.addAttribute("members", members);
+
+        return "members/memberList";
     }
 
     @GetMapping("/{id}")
