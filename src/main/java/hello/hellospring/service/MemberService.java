@@ -2,6 +2,7 @@ package hello.hellospring.service;
 
 import hello.hellospring.domain.Member;
 import hello.hellospring.repository.MemberRepository;
+import hello.hellospring.repository.MemoryMemberRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,25 +10,33 @@ import java.util.Optional;
 
 @Service
 public class MemberService {
-    private final MemberRepository memberRepository;
+    private final MemberRepository memberRepository = new MemoryMemberRepository();
 
-    public MemberService(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
+    /**
+     * join user
+     */
+    public Long join(Member member){
+        validateDuplicateMember(member);
+
+        memberRepository.save(member);
+        return member.getId();
     }
 
-    public void join(String name){
-        memberRepository.save(new Member());
+    private void validateDuplicateMember(Member member) {
+        memberRepository.findByName(member.getName())
+                .ifPresent(m -> {
+                    throw new IllegalStateException("already exists :" + m.getName());
+                });
     }
 
-    public Optional<Member> findById(Long id){
+    public Optional<Member> findOne(Long id){
         return memberRepository.findById(id);
     }
 
-    public Optional<Member> findByName(String name){
-        return memberRepository.findByName(name);
-    }
-
-    public List<Member> findAll() {
+    /**
+     * query all members
+     */
+    public List<Member> findMembers() {
         return memberRepository.findAll();
     }
 }
