@@ -17,11 +17,6 @@ class MemberServiceTest {
         memberService = new MemberService(repository);
     }
 
-    @AfterEach
-    public void afterEach(){
-        repository.clearStore();
-    }
-
     @Test
     void join() {
         //given
