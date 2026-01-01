@@ -3,12 +3,13 @@ package hello.hellospring.controller;
 import hello.hellospring.domain.Member;
 import hello.hellospring.service.MemberService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
-@RequestMapping("/api/v1/members")
+@Controller
 public class MemberController {
     private final MemberService memberService;
 
@@ -17,16 +18,22 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @PostMapping
-    public ResponseEntity<MemberResponse> create(@RequestBody MemberCreateRequest request){
-        Member member = new Member();
-        member.setName(request.getName());
-        memberService.join(member);
-        return ResponseEntity.status(201).body(new MemberResponse(request.getName()));
-
+    @GetMapping("/members/new")
+    public String createForm(){
+        System.out.println("MemberController.createForm");
+        return "members/createMemberForm";
     }
 
-    @GetMapping
+    @PostMapping("/members/new")
+    public String create(MemberForm form){
+        Member member = new Member();
+        member.setName(form.getName());
+        memberService.join(member);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/members")
     public ResponseEntity<List<MemberResponse>> members(){
         List<MemberResponse> memberResponses = memberService.findMembers().stream().map(member -> new MemberResponse(member.getName())).toList();
         return ResponseEntity.ok(memberResponses);
