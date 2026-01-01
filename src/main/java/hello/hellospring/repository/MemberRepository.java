@@ -3,10 +3,11 @@ package hello.hellospring.repository;
 import hello.hellospring.domain.Member;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MemberRepository {
-    public void save(String name);
-    public Member findById(Long id);
-    public List<Member> findByName(String name);
-    public List<Member> findAll();
+    Member save(Member member);
+    Optional<Member> findById(Long id);
+    Optional<Member> findByName(String name);
+    List<Member> findAll();
 }

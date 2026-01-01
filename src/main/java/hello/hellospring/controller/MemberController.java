@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/members")
@@ -32,7 +33,7 @@ public class MemberController {
 
     @GetMapping("/{id}")
     public ResponseEntity<MemberResponse> findById(@PathVariable("id") Long id){
-        Member byId = memberService.findById(id);
+        Member byId = memberService.findById(id).orElseThrow();
         if(byId == null){
             return ResponseEntity.notFound().build();
         }
@@ -41,7 +42,7 @@ public class MemberController {
 
     @GetMapping("/member/serach?name={name}")
     public ResponseEntity<List<MemberResponse>> findByName(@RequestParam("name") String name){
-        List<Member> members = memberService.findByName(name);
+        Optional<Member> members = memberService.findByName(name);
         List<MemberResponse> memberResponses = members.stream().map(member -> new MemberResponse(member.getName())).toList();
         return ResponseEntity.ok(memberResponses);
     }

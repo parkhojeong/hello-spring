@@ -5,6 +5,7 @@ import hello.hellospring.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MemberService {
@@ -15,14 +16,14 @@ public class MemberService {
     }
 
     public void join(String name){
-        memberRepository.save(name);
+        memberRepository.save(new Member());
     }
 
-    public Member findById(Long id){
+    public Optional<Member> findById(Long id){
         return memberRepository.findById(id);
     }
 
-    public List<Member> findByName(String name){
+    public Optional<Member> findByName(String name){
         return memberRepository.findByName(name);
     }
 
